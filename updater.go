@@ -3,8 +3,7 @@ package wgm
 import (
 	"context"
 	"errors"
-
-	"github.com/gookit/slog"
+	"github.com/uiucjfo/jog"
 )
 
 type updater struct {
@@ -16,7 +15,7 @@ type updater struct {
 // Updater creates a new updater instance, can be used for chain call
 func Updater(m any) *updater {
 	if m == nil {
-		slog.Error("must provide model to updater")
+		jog.Error("must provide model to updater")
 		return nil
 	}
 	return &updater{collectionModel: m, ctx: Ctx()}
@@ -27,7 +26,7 @@ func Updater(m any) *updater {
 // return bool does document exist in the database
 func (u *updater) Find() (*updater, bool) {
 	if u.collectionModel == nil {
-		slog.Error("must provide model to updater")
+		jog.Error("must provide model to updater")
 		return u, false
 	}
 	hasResult, err := FindById(u.collectionModel.(IDefaultModel).ColName(), u.collectionModel.(IDefaultModel).GetId(), u.collectionModel)
@@ -35,7 +34,7 @@ func (u *updater) Find() (*updater, bool) {
 		return nil, false
 	}
 	if err != nil {
-		slog.Error(err)
+		jog.Error(err)
 		return nil, false
 	}
 	u.hasResult = true

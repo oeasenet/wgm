@@ -2,8 +2,8 @@ package wgm
 
 import (
 	"context"
-	"github.com/gookit/slog"
 	"github.com/qiniu/qmgo"
+	"github.com/uiucjfo/jog"
 	"time"
 )
 
@@ -41,17 +41,17 @@ func (w *wgm) newCtx() context.Context {
 
 func CloseAll() {
 	if instance == nil {
-		slog.Fatal("must initialize WGM first, by calling InitWgm() method")
+		jog.Fatal("must initialize WGM first, by calling InitWgm() method")
 	}
 
 	if err := instance.client.Close(instance.Ctx()); err != nil {
-		slog.Error(err)
+		jog.Error(err)
 	}
 }
 
 func Ping() error {
 	if instance == nil {
-		slog.Fatal("must initialize WGM first, by calling InitWgm() method")
+		jog.Fatal("must initialize WGM first, by calling InitWgm() method")
 	}
 	return instance.client.Ping(10)
 }

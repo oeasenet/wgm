@@ -3,8 +3,8 @@ package wgm
 import (
 	"context"
 
-	"github.com/gookit/slog"
 	"github.com/qiniu/qmgo"
+	"github.com/uiucjfo/jog"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -51,7 +51,7 @@ func IsNoResult(err error) bool {
 // totalPage 总页面数量
 func FindPage(m IDefaultModel, filter any, res any, pageSize int64, currentPage int64) (totalDoc int64, totalPage int64) {
 	if instance == nil {
-		slog.Fatal("must initialize WGM first, by calling InitWgm() method")
+		jog.Fatal("must initialize WGM first, by calling InitWgm() method")
 	}
 
 	if filter == nil {
@@ -63,7 +63,7 @@ func FindPage(m IDefaultModel, filter any, res any, pageSize int64, currentPage 
 		return 0, 0
 	}
 	if err != nil {
-		slog.Error(err)
+		jog.Error(err)
 		res = nil
 		return 0, 0
 	}
@@ -86,7 +86,7 @@ func FindPage(m IDefaultModel, filter any, res any, pageSize int64, currentPage 
 	err = instance.GetModelCollection(m).Find(instance.Ctx(), filter).Limit(size).Skip(offset).All(res)
 
 	if err != nil {
-		slog.Error(err)
+		jog.Error(err)
 		return 0, 0
 	}
 	// 判断总页数totalPage
@@ -104,7 +104,7 @@ func FindPage(m IDefaultModel, filter any, res any, pageSize int64, currentPage 
 // totalPage 总页面数量
 func FindPageWithOption(m IDefaultModel, filter any, res any, pageSize int64, currentPage int64, option *FindPageOption) (totalDoc int64, totalPage int64) {
 	if instance == nil {
-		slog.Fatal("must initialize WGM first, by calling InitWgm() method")
+		jog.Fatal("must initialize WGM first, by calling InitWgm() method")
 	}
 
 	if filter == nil {
@@ -116,7 +116,7 @@ func FindPageWithOption(m IDefaultModel, filter any, res any, pageSize int64, cu
 		return 0, 0
 	}
 	if err != nil {
-		slog.Error(err)
+		jog.Error(err)
 		res = nil
 		return 0, 0
 	}
@@ -142,7 +142,7 @@ func FindPageWithOption(m IDefaultModel, filter any, res any, pageSize int64, cu
 		Limit(size).Skip(offset).All(res)
 	releaseFindPageOption(option)
 	if err != nil {
-		slog.Error(err)
+		jog.Error(err)
 		return 0, 0
 	}
 	// 判断总页数totalPage
@@ -156,7 +156,7 @@ func FindPageWithOption(m IDefaultModel, filter any, res any, pageSize int64, cu
 // hasResult 是否查询到结果
 func FindOne(m IDefaultModel, filter map[string]any) (hasResult bool) {
 	if instance == nil {
-		slog.Fatal("must initialize WGM first, by calling InitWgm() method")
+		jog.Fatal("must initialize WGM first, by calling InitWgm() method")
 	}
 
 	if filter == nil {
@@ -169,7 +169,7 @@ func FindOne(m IDefaultModel, filter map[string]any) (hasResult bool) {
 	}
 
 	if err != nil {
-		slog.Error(err)
+		jog.Error(err)
 		return false
 	}
 
@@ -178,7 +178,7 @@ func FindOne(m IDefaultModel, filter map[string]any) (hasResult bool) {
 
 func FindById(colName string, id string, res any) (bool, error) {
 	if instance == nil {
-		slog.Fatal("must initialize WGM first, by calling InitWgm() method")
+		jog.Fatal("must initialize WGM first, by calling InitWgm() method")
 	}
 	err := instance.GetCollection(colName).Find(instance.Ctx(), bson.M{"_id": MustHexToObjectId(id)}).One(res)
 	if IsNoResult(err) {
@@ -186,7 +186,7 @@ func FindById(colName string, id string, res any) (bool, error) {
 	}
 
 	if err != nil {
-		slog.Error(err)
+		jog.Error(err)
 		return false, err
 	}
 
@@ -196,7 +196,7 @@ func FindById(colName string, id string, res any) (bool, error) {
 func MustHexToObjectId(strId string) primitive.ObjectID {
 	objId, err := primitive.ObjectIDFromHex(strId)
 	if err != nil {
-		slog.Error(err)
+		jog.Error(err)
 		return primitive.NilObjectID
 	}
 	return objId
@@ -204,7 +204,7 @@ func MustHexToObjectId(strId string) primitive.ObjectID {
 
 func Insert(m IDefaultModel) (*qmgo.InsertOneResult, error) {
 	if instance == nil {
-		slog.Fatal("must initialize WGM first, by calling InitWgm() method")
+		jog.Fatal("must initialize WGM first, by calling InitWgm() method")
 	}
 	result, err := instance.GetModelCollection(m).InsertOne(instance.Ctx(), m)
 	if err != nil {
@@ -215,7 +215,7 @@ func Insert(m IDefaultModel) (*qmgo.InsertOneResult, error) {
 
 func Update(m IDefaultModel, filter ...map[string]any) error {
 	if instance == nil {
-		slog.Fatal("must initialize WGM first, by calling InitWgm() method")
+		jog.Fatal("must initialize WGM first, by calling InitWgm() method")
 	}
 	f := bson.M{}
 	if len(filter) > 0 {
@@ -235,7 +235,7 @@ func Update(m IDefaultModel, filter ...map[string]any) error {
 
 func Delete(m IDefaultModel) error {
 	if instance == nil {
-		slog.Fatal("must initialize WGM first, by calling InitWgm() method")
+		jog.Fatal("must initialize WGM first, by calling InitWgm() method")
 	}
 
 	err := instance.GetModelCollection(m).RemoveId(instance.Ctx(), m.GetObjectID())
@@ -251,7 +251,7 @@ func Delete(m IDefaultModel) error {
 // bool 是否存在
 func ExistInDB(m IDefaultModel, filter any) bool {
 	if instance == nil {
-		slog.Fatal("must initialize WGM first, by calling InitWgm() method")
+		jog.Fatal("must initialize WGM first, by calling InitWgm() method")
 	}
 	if filter == nil {
 		filter = bson.D{}
@@ -271,7 +271,7 @@ func ExistInDB(m IDefaultModel, filter any) bool {
 // @Description: 去重查询,详情见 https://docs.mongodb.com/manual/reference/command/distinct/
 func Distinct(m IDefaultModel, filter any, field string, result any) error {
 	if instance == nil {
-		slog.Fatal("must initialize WGM first, by calling InitWgm() method")
+		jog.Fatal("must initialize WGM first, by calling InitWgm() method")
 	}
 	if filter == nil {
 		filter = bson.D{}
@@ -291,7 +291,7 @@ func Distinct(m IDefaultModel, filter any, field string, result any) error {
 // @Description: 聚合查询,详情见 https://www.mongodb.com/docs/manual/aggregation/
 func Aggregate(m IDefaultModel, pipeline any, result any) error {
 	if instance == nil {
-		slog.Fatal("must initialize WGM first, by calling InitWgm() method")
+		jog.Fatal("must initialize WGM first, by calling InitWgm() method")
 	}
 
 	err := instance.GetModelCollection(m).Aggregate(instance.Ctx(), pipeline).All(result)
