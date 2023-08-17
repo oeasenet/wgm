@@ -3,7 +3,7 @@ package wgm_test
 import (
 	"github.com/stretchr/testify/require"
 	"github.com/uiucjfo/jog"
-	"github.com/wshops/wgm"
+	"github.com/uiucjfo/wgm"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"reflect"
