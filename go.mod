@@ -1,4 +1,4 @@
-module github.com/wshops/wgm
+module github.com/uiucjfo/wgm
 
 go 1.19
 
