@@ -3,8 +3,8 @@ package wgm
 import (
 	"context"
 
+	"github.com/oeasenet/jog"
 	"github.com/qiniu/qmgo"
-	"github.com/uiucjfo/jog"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"

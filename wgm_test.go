@@ -1,8 +1,8 @@
 package wgm_test
 
 import (
+	"github.com/oeasenet/wgm"
 	"github.com/stretchr/testify/require"
-	"github.com/uiucjfo/wgm"
 	"testing"
 )
 

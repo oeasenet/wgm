@@ -2,8 +2,8 @@ package wgm
 
 import (
 	"context"
+	"github.com/oeasenet/jog"
 	"github.com/qiniu/qmgo"
-	"github.com/uiucjfo/jog"
 	"time"
 )
 

@@ -1,7 +1,7 @@
 package wgm_test
 
 import (
-	"github.com/uiucjfo/wgm"
+	"github.com/oeasenet/wgm"
 )
 
 type Doc struct {

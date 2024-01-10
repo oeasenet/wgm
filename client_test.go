@@ -1,9 +1,9 @@
 package wgm_test
 
 import (
+	"github.com/oeasenet/jog"
+	"github.com/oeasenet/wgm"
 	"github.com/stretchr/testify/require"
-	"github.com/uiucjfo/jog"
-	"github.com/uiucjfo/wgm"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"reflect"

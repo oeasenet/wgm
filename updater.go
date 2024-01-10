@@ -3,7 +3,7 @@ package wgm
 import (
 	"context"
 	"errors"
-	"github.com/uiucjfo/jog"
+	"github.com/oeasenet/jog"
 )
 
 type updater struct {
