@@ -6,13 +6,18 @@ import (
 	"github.com/oeasenet/jog"
 )
 
+// Updater creates a new updater object for the provided model object.
 type updater struct {
 	collectionModel any
 	ctx             context.Context
 	hasResult       bool
 }
 
-// Updater creates a new updater instance, can be used for chain call
+// Updater creates an updater object based on the provided model.
+//
+// param m: the model to be updated.
+//
+// return: the updater object.
 func Updater(m any) *updater {
 	if m == nil {
 		jog.Error("must provide model to updater")
