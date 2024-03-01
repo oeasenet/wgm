@@ -7,7 +7,7 @@ toolchain go1.21.0
 require (
 	github.com/oeasenet/jog v1.0.3
 	github.com/qiniu/qmgo v1.1.8
-	github.com/stretchr/testify v1.8.2
+	github.com/stretchr/testify v1.9.0
 	go.mongodb.org/mongo-driver v1.13.1
 )
 
