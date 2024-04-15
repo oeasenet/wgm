@@ -8,7 +8,7 @@ require (
 	github.com/oeasenet/jog v1.0.3
 	github.com/qiniu/qmgo v1.1.8
 	github.com/stretchr/testify v1.8.2
-	go.mongodb.org/mongo-driver v1.13.1
+	go.mongodb.org/mongo-driver v1.15.0
 )
 
 require (
