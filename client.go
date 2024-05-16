@@ -2,8 +2,8 @@ package wgm
 
 import (
 	"context"
+	"errors"
 
-	"github.com/oeasenet/jog"
 	"github.com/qiniu/qmgo"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -34,10 +34,9 @@ func Ctx() context.Context {
 // err 数据库查询后返回的 err
 // bool 结果，true 为未查询到数据，反之亦然
 func IsNoResult(err error) bool {
-	if err == mongo.ErrNoDocuments || err == qmgo.ErrNoSuchDocuments {
+	if errors.Is(err, mongo.ErrNoDocuments) || errors.Is(err, qmgo.ErrNoSuchDocuments) {
 		return true
 	}
-
 	return false
 }
 
@@ -51,7 +50,7 @@ func IsNoResult(err error) bool {
 // totalPage 总页面数量
 func FindPage(m IDefaultModel, filter any, res any, pageSize int64, currentPage int64) (totalDoc int64, totalPage int64) {
 	if instance == nil {
-		jog.Fatal("must initialize WGM first, by calling InitWgm() method")
+		panic("must initialize WGM first, by calling NewWGM() method")
 	}
 
 	if filter == nil {
@@ -63,7 +62,7 @@ func FindPage(m IDefaultModel, filter any, res any, pageSize int64, currentPage 
 		return 0, 0
 	}
 	if err != nil {
-		jog.Error(err)
+		// Error: error
 		res = nil
 		return 0, 0
 	}
@@ -86,11 +85,10 @@ func FindPage(m IDefaultModel, filter any, res any, pageSize int64, currentPage 
 	err = instance.GetModelCollection(m).Find(instance.Ctx(), filter).Limit(size).Skip(offset).All(res)
 
 	if err != nil {
-		jog.Error(err)
+		// Error: error
 		return 0, 0
 	}
 	// 判断总页数totalPage
-
 	return countDoc, totalPage
 }
 
@@ -104,7 +102,7 @@ func FindPage(m IDefaultModel, filter any, res any, pageSize int64, currentPage 
 // totalPage 总页面数量
 func FindPageWithOption(m IDefaultModel, filter any, res any, pageSize int64, currentPage int64, option *FindPageOption) (totalDoc int64, totalPage int64) {
 	if instance == nil {
-		jog.Fatal("must initialize WGM first, by calling InitWgm() method")
+		panic("must initialize WGM first, by calling NewWGM() method")
 	}
 
 	if filter == nil {
@@ -116,7 +114,7 @@ func FindPageWithOption(m IDefaultModel, filter any, res any, pageSize int64, cu
 		return 0, 0
 	}
 	if err != nil {
-		jog.Error(err)
+		// Error: error
 		res = nil
 		return 0, 0
 	}
@@ -142,7 +140,7 @@ func FindPageWithOption(m IDefaultModel, filter any, res any, pageSize int64, cu
 		Limit(size).Skip(offset).All(res)
 	releaseFindPageOption(option)
 	if err != nil {
-		jog.Error(err)
+		// Error: error
 		return 0, 0
 	}
 	// 判断总页数totalPage
@@ -156,7 +154,7 @@ func FindPageWithOption(m IDefaultModel, filter any, res any, pageSize int64, cu
 // hasResult 是否查询到结果
 func FindOne(m IDefaultModel, filter map[string]any) (hasResult bool) {
 	if instance == nil {
-		jog.Fatal("must initialize WGM first, by calling InitWgm() method")
+		panic("must initialize WGM first, by calling NewWGM() method")
 	}
 
 	if filter == nil {
@@ -169,7 +167,7 @@ func FindOne(m IDefaultModel, filter map[string]any) (hasResult bool) {
 	}
 
 	if err != nil {
-		jog.Error(err)
+		// Error: error
 		return false
 	}
 
@@ -178,7 +176,7 @@ func FindOne(m IDefaultModel, filter map[string]any) (hasResult bool) {
 
 func FindById(colName string, id string, res any) (bool, error) {
 	if instance == nil {
-		jog.Fatal("must initialize WGM first, by calling InitWgm() method")
+		panic("must initialize WGM first, by calling NewWGM() method")
 	}
 	err := instance.GetCollection(colName).Find(instance.Ctx(), bson.M{"_id": MustHexToObjectId(id)}).One(res)
 	if IsNoResult(err) {
@@ -186,7 +184,7 @@ func FindById(colName string, id string, res any) (bool, error) {
 	}
 
 	if err != nil {
-		jog.Error(err)
+		// Error: error
 		return false, err
 	}
 
@@ -196,7 +194,7 @@ func FindById(colName string, id string, res any) (bool, error) {
 func MustHexToObjectId(strId string) primitive.ObjectID {
 	objId, err := primitive.ObjectIDFromHex(strId)
 	if err != nil {
-		jog.Error(err)
+		// Error: error
 		return primitive.NilObjectID
 	}
 	return objId
@@ -204,7 +202,7 @@ func MustHexToObjectId(strId string) primitive.ObjectID {
 
 func Insert(m IDefaultModel) (*qmgo.InsertOneResult, error) {
 	if instance == nil {
-		jog.Fatal("must initialize WGM first, by calling InitWgm() method")
+		panic("must initialize WGM first, by calling NewWGM() method")
 	}
 	result, err := instance.GetModelCollection(m).InsertOne(instance.Ctx(), m)
 	if err != nil {
@@ -215,7 +213,7 @@ func Insert(m IDefaultModel) (*qmgo.InsertOneResult, error) {
 
 func Update(m IDefaultModel, filter ...map[string]any) error {
 	if instance == nil {
-		jog.Fatal("must initialize WGM first, by calling InitWgm() method")
+		panic("must initialize WGM first, by calling NewWGM() method")
 	}
 	f := bson.M{}
 	if len(filter) > 0 {
@@ -235,7 +233,7 @@ func Update(m IDefaultModel, filter ...map[string]any) error {
 
 func Delete(m IDefaultModel) error {
 	if instance == nil {
-		jog.Fatal("must initialize WGM first, by calling InitWgm() method")
+		panic("must initialize WGM first, by calling NewWGM() method")
 	}
 
 	err := instance.GetModelCollection(m).RemoveId(instance.Ctx(), m.GetObjectID())
@@ -251,7 +249,7 @@ func Delete(m IDefaultModel) error {
 // bool 是否存在
 func ExistInDB(m IDefaultModel, filter any) bool {
 	if instance == nil {
-		jog.Fatal("must initialize WGM first, by calling InitWgm() method")
+		panic("must initialize WGM first, by calling NewWGM() method")
 	}
 	if filter == nil {
 		filter = bson.D{}
@@ -271,7 +269,7 @@ func ExistInDB(m IDefaultModel, filter any) bool {
 // @Description: 去重查询,详情见 https://docs.mongodb.com/manual/reference/command/distinct/
 func Distinct(m IDefaultModel, filter any, field string, result any) error {
 	if instance == nil {
-		jog.Fatal("must initialize WGM first, by calling InitWgm() method")
+		panic("must initialize WGM first, by calling NewWGM() method")
 	}
 	if filter == nil {
 		filter = bson.D{}
@@ -291,7 +289,7 @@ func Distinct(m IDefaultModel, filter any, field string, result any) error {
 // @Description: 聚合查询,详情见 https://www.mongodb.com/docs/manual/aggregation/
 func Aggregate(m IDefaultModel, pipeline any, result any) error {
 	if instance == nil {
-		jog.Fatal("must initialize WGM first, by calling InitWgm() method")
+		panic("must initialize WGM first, by calling NewWGM() method")
 	}
 
 	err := instance.GetModelCollection(m).Aggregate(instance.Ctx(), pipeline).All(result)

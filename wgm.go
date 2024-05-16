@@ -2,7 +2,7 @@ package wgm
 
 import (
 	"context"
-	"github.com/oeasenet/jog"
+	"errors"
 	"github.com/qiniu/qmgo"
 	"time"
 )
@@ -87,7 +87,27 @@ type wgm struct {
 // Usage example:
 //
 //	SetupDefaultConnection()
+//
+
+// Deprecated: Use InitWgm instead.
 func InitWgm(connectionUri string, databaseName string) error {
+	ctx := context.Background()
+	client, err := qmgo.NewClient(ctx, &qmgo.Config{
+		Uri:      connectionUri,
+		Database: databaseName,
+	})
+	if err != nil {
+		return err
+	}
+	instance = &wgm{
+		client: client,
+		dbName: databaseName,
+	}
+	return nil
+}
+
+// NewWGM initializes the connection to the specified database using the provided connection URI and database name.
+func NewWGM(connectionUri string, databaseName string) error {
 	ctx := context.Background()
 	client, err := qmgo.NewClient(ctx, &qmgo.Config{
 		Uri:      connectionUri,
@@ -122,21 +142,22 @@ func (w *wgm) newCtx() context.Context {
 	return w.newCtxWithTimeout(10 * time.Second)
 }
 
-func CloseAll() {
+func CloseAll() error {
 	if instance == nil {
-		jog.Fatal("must initialize WGM first, by calling InitWgm() method")
+		return errors.New("must initialize WGM first, by calling NewWGM() method")
 	}
 
 	if err := instance.client.Close(instance.Ctx()); err != nil {
-		jog.Error(err)
+		return err
 	}
+	return nil
 }
 
 // Ping checks if the WGM instance is initialized and then performs a ping operation on the MongoDB connection.
 // If the WGM instance is not initialized, it logs an error message and returns an error.
 func Ping() error {
 	if instance == nil {
-		jog.Fatal("must initialize WGM first, by calling InitWgm() method")
+		return errors.New("must initialize WGM first, by calling NewWGM() method")
 	}
 	return instance.client.Ping(10)
 }

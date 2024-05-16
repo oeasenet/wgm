@@ -1,7 +1,6 @@
 package wgm_test
 
 import (
-	"github.com/oeasenet/jog"
 	"github.com/oeasenet/wgm"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson"
@@ -225,7 +224,7 @@ func TestDistinct(t *testing.T) {
 	defer DelStu(stu2)
 	var infoArr []Info
 	err := wgm.Distinct(stu1, nil, "info", &infoArr)
-	jog.Info(infoArr)
+	t.Log(infoArr)
 	require.Nil(t, err)
 
 	require.Equal(t, 2, len(infoArr))
