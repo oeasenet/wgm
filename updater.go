@@ -3,7 +3,6 @@ package wgm
 import (
 	"context"
 	"errors"
-	"github.com/oeasenet/jog"
 )
 
 // Updater creates a new updater object for the provided model object.
@@ -18,9 +17,17 @@ type updater struct {
 // param m: the model to be updated.
 //
 // return: the updater object.
-func Updater(m any) *updater {
+func Updater(m any) (*updater, error) {
 	if m == nil {
-		jog.Error("must provide model to updater")
+		//Error must provide a valid model to updater
+		return nil, errors.New("must provide a valid model to updater")
+	}
+	return &updater{collectionModel: m, ctx: Ctx()}, nil
+}
+
+func MustUpdater(m any) *updater {
+	if m == nil {
+		//Error must provide a valid model to updater
 		return nil
 	}
 	return &updater{collectionModel: m, ctx: Ctx()}
@@ -31,7 +38,7 @@ func Updater(m any) *updater {
 // return bool does document exist in the database
 func (u *updater) Find() (*updater, bool) {
 	if u.collectionModel == nil {
-		jog.Error("must provide model to updater")
+		//Error must provide a valid model to updater
 		return u, false
 	}
 	hasResult, err := FindById(u.collectionModel.(IDefaultModel).ColName(), u.collectionModel.(IDefaultModel).GetId(), u.collectionModel)
@@ -39,7 +46,6 @@ func (u *updater) Find() (*updater, bool) {
 		return nil, false
 	}
 	if err != nil {
-		jog.Error(err)
 		return nil, false
 	}
 	u.hasResult = true

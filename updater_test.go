@@ -8,7 +8,7 @@ import (
 
 func TestGetUpdater(t *testing.T) {
 	doc := Doc{}
-	u := wgm.Updater(doc)
+	u := wgm.MustUpdater(doc)
 	require.NotNil(t, u)
 
 }
@@ -21,7 +21,7 @@ func TestUpdater_Find(t *testing.T) {
 
 	doc := &Doc{}
 	doc.Id = objectID
-	u, hasResult := wgm.Updater(doc).Find()
+	u, hasResult := wgm.MustUpdater(doc).Find()
 
 	require.True(t, hasResult)
 	require.NotNil(t, u)
@@ -37,7 +37,7 @@ func TestUpdater_Update(t *testing.T) {
 
 	doc := &Doc{}
 	doc.Id = objectID
-	u, _ := wgm.Updater(doc).Find()
+	u, _ := wgm.MustUpdater(doc).Find()
 	doc.Name = "dada"
 	doc.Age = 99
 	err := u.Update()
@@ -57,7 +57,7 @@ func BenchmarkUpdater_Find(b *testing.B) {
 
 	doc := &Doc{}
 	doc.Id = objectID
-	u, hasResult := wgm.Updater(doc).Find()
+	u, hasResult := wgm.MustUpdater(doc).Find()
 
 	require.True(b, hasResult)
 	require.NotNil(b, u)
@@ -73,7 +73,7 @@ func BenchmarkUpdater_Update(b *testing.B) {
 
 	doc := &Doc{}
 	doc.Id = objectID
-	u, _ := wgm.Updater(doc).Find()
+	u, _ := wgm.MustUpdater(doc).Find()
 	doc.Name = "dada"
 	doc.Age = 99
 	err := u.Update()
